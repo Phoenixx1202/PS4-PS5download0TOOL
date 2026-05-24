@@ -6,6 +6,8 @@ Windows tool for extracting, editing, and rebuilding `download0.dat` UFS2 images
 
 PS4-PS5download0TOOL provides a graphical workflow around `download0.dat` files:
 
+<img width="1915" height="1027" alt="image" src="https://github.com/user-attachments/assets/19ea436c-3c57-43b2-ba9b-a3483eab50a8" />
+
 1. Import an original `download0.dat`.
 2. Extract its UFS2 file tree into a work folder.
 3. Edit the extracted files freely.
