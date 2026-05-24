@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Projects\\PS4-PS5download0TOOL\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{890CB15D-6185-4EB5-82C9-93F69B0973BF}|PS4-PS5download0TOOL.csproj|c:\\projects\\ps4-ps5download0tool\\ps4-ps5download0tool.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{890CB15D-6185-4EB5-82C9-93F69B0973BF}|PS4-PS5download0TOOL.csproj|solutionrelative:ps4-ps5download0tool.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PS4-PS5download0TOOL",
+              "DocumentMoniker": "C:\\Projects\\PS4-PS5download0TOOL\\PS4-PS5download0TOOL.csproj",
+              "RelativeDocumentMoniker": "PS4-PS5download0TOOL.csproj",
+              "ToolTip": "C:\\Projects\\PS4-PS5download0TOOL\\PS4-PS5download0TOOL.csproj",
+              "RelativeToolTip": "PS4-PS5download0TOOL.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-24T03:57:41.524Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
