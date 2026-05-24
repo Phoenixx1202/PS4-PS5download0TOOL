@@ -1,4 +1,4 @@
-name: Build Windows EXE and Publish Release
+name: Build Windows Single EXE and Publish Release
 
 on:
   push:
@@ -30,11 +30,10 @@ env:
   CONFIGURATION: Release
   MAUI_VERSION: 8.0.100
   PUBLISH_DIR: artifacts/publish
-  PACKAGE_DIR: artifacts/package
 
 jobs:
   build-windows:
-    name: Build Windows x64
+    name: Build Windows Single EXE
     runs-on: windows-latest
 
     steps:
@@ -89,9 +88,13 @@ jobs:
             -p:RuntimeIdentifierOverride="$env:RUNTIME_IDENTIFIER" `
             -p:WindowsPackageType=None `
             -p:WindowsAppSDKSelfContained=true `
-            -p:MauiVersion="$env:MAUI_VERSION"
+            -p:MauiVersion="$env:MAUI_VERSION" `
+            -p:SelfContained=true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true
 
-      - name: Publish Windows EXE
+      - name: Publish Windows single EXE
         shell: pwsh
         run: |
           dotnet publish "$env:PROJECT_FILE" `
@@ -101,20 +104,24 @@ jobs:
             -o "$env:PUBLISH_DIR" `
             --no-restore `
             -p:TargetFrameworks="$env:TARGET_FRAMEWORK" `
+            -p:TargetFramework="$env:TARGET_FRAMEWORK" `
             -p:RuntimeIdentifierOverride="$env:RUNTIME_IDENTIFIER" `
             -p:WindowsPackageType=None `
             -p:WindowsAppSDKSelfContained=true `
-            -p:PublishReadyToRun=false `
-            -p:MauiVersion="$env:MAUI_VERSION"
+            -p:MauiVersion="$env:MAUI_VERSION" `
+            -p:SelfContained=true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:IncludeAllContentForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:PublishReadyToRun=false
 
-      - name: Validate publish output
+      - name: Validate EXE output
         id: paths
         shell: pwsh
         run: |
           $publishDir = Join-Path $pwd "$env:PUBLISH_DIR"
-          $packageDir = Join-Path $pwd "$env:PACKAGE_DIR"
           $exePath = Join-Path $publishDir "$env:APP_NAME.exe"
-          $zipPath = Join-Path $packageDir "$env:APP_NAME-windows-x64.zip"
 
           if (!(Test-Path $publishDir)) {
             throw "Publish folder not found: $publishDir"
@@ -124,36 +131,17 @@ jobs:
             throw "EXE not found: $exePath"
           }
 
-          if (!(Test-Path $packageDir)) {
-            New-Item -ItemType Directory -Path $packageDir | Out-Null
-          }
-
           Write-Host "Publish directory: $publishDir"
           Write-Host "EXE found: $exePath"
-          Write-Host "ZIP output: $zipPath"
 
           "publish_dir=$publishDir" >> $env:GITHUB_OUTPUT
           "exe_path=$exePath" >> $env:GITHUB_OUTPUT
-          "zip_path=$zipPath" >> $env:GITHUB_OUTPUT
 
-      - name: Create ZIP package
-        shell: pwsh
-        run: |
-          $zip = "${{ steps.paths.outputs.zip_path }}"
-          $publishDir = "${{ steps.paths.outputs.publish_dir }}"
-
-          if (Test-Path $zip) {
-            Remove-Item $zip -Force
-          }
-
-          Compress-Archive -Path "$publishDir\*" -DestinationPath $zip -Force
-          Write-Host "Created ZIP: $zip"
-
-      - name: Upload build artifact
+      - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PS4-PS5download0TOOL-windows-x64
-          path: ${{ steps.paths.outputs.zip_path }}
+          name: PS4-PS5download0TOOL-windows-x64-exe
+          path: ${{ steps.paths.outputs.exe_path }}
           if-no-files-found: error
           retention-days: 30
 
@@ -200,32 +188,27 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $tag = "${{ steps.release.outputs.tag }}"
-          $zip = "${{ steps.paths.outputs.zip_path }}"
+          $exe = "${{ steps.paths.outputs.exe_path }}"
           $releaseName = "$env:APP_NAME $tag"
 
           $notes = @"
-          Automatic Windows x64 build.
+          Automatic Windows x64 single EXE build.
 
-          Main file:
+          File:
           - PS4-PS5download0TOOL.exe
-
-          Important:
-          - Download and extract the full ZIP package.
-          - Do not run only the EXE file outside the publish folder.
-          - The sleuthkit folder is included in the published package.
           "@
 
           gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
 
           if ($LASTEXITCODE -eq 0) {
-            Write-Host "Release already exists. Updating ZIP package..."
-            gh release upload $tag $zip --clobber --repo $env:GITHUB_REPOSITORY
+            Write-Host "Release already exists. Updating EXE..."
+            gh release upload $tag $exe --clobber --repo $env:GITHUB_REPOSITORY
           }
           else {
             Write-Host "Creating release: $tag"
 
             $args = @(
-              "release", "create", $tag, $zip,
+              "release", "create", $tag, $exe,
               "--repo", $env:GITHUB_REPOSITORY,
               "--title", $releaseName,
               "--notes", $notes
