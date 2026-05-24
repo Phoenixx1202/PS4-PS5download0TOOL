@@ -1,0 +1,222 @@
+name: Build Windows Single EXE and Publish Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version. Example: v1.0.0"
+        required: true
+        default: "v1.0.0"
+      prerelease:
+        description: "Mark as prerelease?"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+env:
+  PROJECT_FILE: PS4-PS5download0TOOL.csproj
+  APP_NAME: PS4-PS5download0TOOL
+  DOTNET_VERSION: 8.0.417
+  TARGET_FRAMEWORK: net8.0-windows10.0.19041.0
+  RUNTIME_IDENTIFIER: win10-x64
+  CONFIGURATION: Release
+  MAUI_VERSION: 8.0.100
+  PUBLISH_DIR: artifacts/publish
+
+jobs:
+  build-windows:
+    name: Build Windows Single EXE
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create global.json
+        shell: pwsh
+        run: |
+          $json = @{
+            sdk = @{
+              version = "$env:DOTNET_VERSION"
+              rollForward = "latestPatch"
+              allowPrerelease = $false
+            }
+          } | ConvertTo-Json -Depth 5
+
+          Set-Content -Path "global.json" -Value $json -Encoding UTF8
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Verify .NET SDK
+        shell: pwsh
+        run: |
+          $version = dotnet --version
+          Write-Host "Selected .NET SDK: $version"
+
+          if (!$version.StartsWith("8.0.")) {
+            throw "The selected .NET SDK must be 8.0.x"
+          }
+
+          dotnet --info
+
+      - name: Install .NET MAUI workload
+        shell: pwsh
+        run: |
+          dotnet workload install maui --skip-manifest-update --source https://api.nuget.org/v3/index.json
+          dotnet workload list
+
+      - name: Restore Windows target
+        shell: pwsh
+        run: |
+          dotnet restore "$env:PROJECT_FILE" `
+            -r "$env:RUNTIME_IDENTIFIER" `
+            -p:TargetFrameworks="$env:TARGET_FRAMEWORK" `
+            -p:TargetFramework="$env:TARGET_FRAMEWORK" `
+            -p:RuntimeIdentifierOverride="$env:RUNTIME_IDENTIFIER" `
+            -p:WindowsPackageType=None `
+            -p:WindowsAppSDKSelfContained=true `
+            -p:MauiVersion="$env:MAUI_VERSION" `
+            -p:SelfContained=true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true
+
+      - name: Publish Windows single EXE
+        shell: pwsh
+        run: |
+          dotnet publish "$env:PROJECT_FILE" `
+            -f "$env:TARGET_FRAMEWORK" `
+            -c "$env:CONFIGURATION" `
+            -r "$env:RUNTIME_IDENTIFIER" `
+            -o "$env:PUBLISH_DIR" `
+            --no-restore `
+            -p:TargetFrameworks="$env:TARGET_FRAMEWORK" `
+            -p:TargetFramework="$env:TARGET_FRAMEWORK" `
+            -p:RuntimeIdentifierOverride="$env:RUNTIME_IDENTIFIER" `
+            -p:WindowsPackageType=None `
+            -p:WindowsAppSDKSelfContained=true `
+            -p:MauiVersion="$env:MAUI_VERSION" `
+            -p:SelfContained=true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:IncludeAllContentForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:PublishReadyToRun=false
+
+      - name: Validate EXE output
+        id: paths
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $pwd "$env:PUBLISH_DIR"
+          $exePath = Join-Path $publishDir "$env:APP_NAME.exe"
+
+          if (!(Test-Path $publishDir)) {
+            throw "Publish folder not found: $publishDir"
+          }
+
+          if (!(Test-Path $exePath)) {
+            throw "EXE not found: $exePath"
+          }
+
+          Write-Host "Publish directory: $publishDir"
+          Write-Host "EXE found: $exePath"
+
+          "publish_dir=$publishDir" >> $env:GITHUB_OUTPUT
+          "exe_path=$exePath" >> $env:GITHUB_OUTPUT
+
+      - name: Upload EXE artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PS4-PS5download0TOOL-windows-x64-exe
+          path: ${{ steps.paths.outputs.exe_path }}
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Define release data
+        id: release
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $tag = "${{ inputs.version }}"
+            $isPrerelease = "${{ inputs.prerelease }}"
+          }
+          elseif ("${{ startsWith(github.ref, 'refs/tags/v') }}" -eq "true") {
+            $tag = "${{ github.ref_name }}"
+            $isPrerelease = "false"
+          }
+          else {
+            $tag = ""
+            $isPrerelease = "false"
+          }
+
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "prerelease=$isPrerelease" >> $env:GITHUB_OUTPUT
+
+      - name: Create or update tag for manual release
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          $tag = "${{ steps.release.outputs.tag }}"
+
+          if ($tag -notmatch '^v[0-9]+(\.[0-9]+){0,2}([-+][A-Za-z0-9\.-]+)?$') {
+            throw "Use a version in the format v1.0.0"
+          }
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag -f $tag
+          git push origin $tag --force
+
+      - name: Publish GitHub Release
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ steps.release.outputs.tag }}"
+          $exe = "${{ steps.paths.outputs.exe_path }}"
+          $releaseName = "$env:APP_NAME $tag"
+
+          $notes = @"
+          Automatic Windows x64 single EXE build.
+
+          File:
+          - PS4-PS5download0TOOL.exe
+          "@
+
+          gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
+
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Release already exists. Updating EXE..."
+            gh release upload $tag $exe --clobber --repo $env:GITHUB_REPOSITORY
+          }
+          else {
+            Write-Host "Creating release: $tag"
+
+            $args = @(
+              "release", "create", $tag, $exe,
+              "--repo", $env:GITHUB_REPOSITORY,
+              "--title", $releaseName,
+              "--notes", $notes
+            )
+
+            if ("${{ steps.release.outputs.prerelease }}" -eq "true") {
+              $args += "--prerelease"
+            }
+
+            & gh @args
+          }
