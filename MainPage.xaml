@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PS4_PS5download0TOOL.MainPage"
+             Title="PS4/PS5 download0.dat Tool"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#05070D">
+
+    <ContentPage.Resources>
+        <LinearGradientBrush x:Key="CyberBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#05070D" Offset="0.00" />
+            <GradientStop Color="#121428" Offset="0.42" />
+            <GradientStop Color="#080A12" Offset="1.00" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="GlassBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#4718F0FF" Offset="0.00" />
+            <GradientStop Color="#2E111827" Offset="0.55" />
+            <GradientStop Color="#3BFF2BD6" Offset="1.00" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="PanelStrokeBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#B800E5FF" Offset="0.00" />
+            <GradientStop Color="#80FF2BD6" Offset="0.55" />
+            <GradientStop Color="#559DFF00" Offset="1.00" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="PrimaryButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#00E5FF" Offset="0.00" />
+            <GradientStop Color="#7C3DFF" Offset="1.00" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="DangerButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#FF2BD6" Offset="0.00" />
+            <GradientStop Color="#FF4B6E" Offset="1.00" />
+        </LinearGradientBrush>
+
+        <Style x:Key="NeonButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryButtonBrush}" />
+            <Setter Property="TextColor" Value="#06101A" />
+            <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="BorderColor" Value="#B8EFFFFF" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="MinimumHeightRequest" Value="46" />
+        </Style>
+
+        <Style x:Key="GhostButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="#2418293D" />
+            <Setter Property="TextColor" Value="#DDEBFF" />
+            <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="BorderColor" Value="#6600E5FF" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="MinimumHeightRequest" Value="46" />
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource NeonButton}">
+            <Setter Property="Background" Value="{StaticResource DangerButtonBrush}" />
+            <Setter Property="TextColor" Value="#12030F" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid Background="{StaticResource CyberBackgroundBrush}" RowDefinitions="Auto,*,Auto">
+        <Grid Opacity="0.22" InputTransparent="True">
+            <BoxView Color="#00E5FF" HeightRequest="1" VerticalOptions="Start" Margin="0,86,0,0" />
+            <BoxView Color="#FF2BD6" HeightRequest="1" VerticalOptions="Start" Margin="0,176,0,0" />
+            <BoxView Color="#9DFF00" WidthRequest="1" HorizontalOptions="End" Margin="0,0,72,0" />
+            <BoxView Color="#00E5FF" WidthRequest="1" HorizontalOptions="Start" Margin="88,0,0,0" />
+        </Grid>
+
+        <Border Grid.Row="0"
+                Margin="20,18,20,10"
+                Padding="18,14"
+                Background="{StaticResource GlassBrush}"
+                Stroke="{StaticResource PanelStrokeBrush}"
+                StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8" />
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#00E5FF" Opacity="0.22" Radius="22" Offset="0,0" />
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="Auto,*,240" ColumnSpacing="18">
+                <Border Grid.Column="0"
+                        WidthRequest="104"
+                        HeightRequest="52"
+                        BackgroundColor="#1400E5FF"
+                        Stroke="#B800E5FF"
+                        StrokeThickness="1"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Label Text="PS4/PS5"
+                           TextColor="#F6FEFF"
+                           FontSize="22"
+                           FontFamily="OpenSansSemibold"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                    <Label x:Name="TitleLabel"
+                           Text="PS4/PS5 download0.dat Tool"
+                           TextColor="#F6FEFF"
+                           FontSize="25"
+                           FontFamily="OpenSansSemibold"
+                           FontAttributes="Bold" />
+                    <Label x:Name="SubtitleLabel"
+                           Text="Extract, edit and rebuild PS4/PS5 download0.dat images"
+                           TextColor="#A9C7D8"
+                           FontSize="12" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
+                    <Label x:Name="LanguageTitleLabel"
+                           Text="Language"
+                           TextColor="#00E5FF"
+                           FontSize="10"
+                           FontFamily="OpenSansSemibold"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1.6" />
+                    <Border BackgroundColor="#38111A28"
+                            Stroke="#6600E5FF"
+                            StrokeThickness="1"
+                            Padding="8,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Picker x:Name="LanguagePicker"
+                                SelectedIndexChanged="OnLanguageChanged"
+                                TextColor="#F6FEFF"
+                                TitleColor="#84A7B9"
+                                BackgroundColor="Transparent"
+                                FontSize="13" />
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,4,20,14" Spacing="14">
+                <Border Padding="18"
+                        Background="{StaticResource GlassBrush}"
+                        Stroke="{StaticResource PanelStrokeBrush}"
+                        StrokeThickness="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#FF2BD6" Opacity="0.14" Radius="18" Offset="0,0" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="14">
+                        <Label x:Name="SourceTitleLabel"
+                               Text="ORIGINAL DAT (EXTRACT ONLY)"
+                               TextColor="#00E5FF"
+                               FontSize="10"
+                               FontFamily="OpenSansSemibold"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.8" />
+
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="#48101624"
+                                    Stroke="#4C7C3DFF"
+                                    StrokeThickness="1"
+                                    Padding="8,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Entry x:Name="InputPathEntry"
+                                       IsReadOnly="True"
+                                       Placeholder="Import download0.dat only when extracting"
+                                       PlaceholderColor="#7F95A5"
+                                       TextColor="#F6FEFF"
+                                       BackgroundColor="Transparent"
+                                       FontSize="13" />
+                            </Border>
+
+                            <Button Grid.Column="1"
+                                    x:Name="ImportButton"
+                                    Text="Import"
+                                    ImageSource="import_file.png"
+                                    ContentLayout="Left,8"
+                                    Clicked="OnBrowseInputClicked"
+                                    Style="{StaticResource NeonButton}" />
+                        </Grid>
+
+                        <Label x:Name="InputFileInfoLabel"
+                               TextColor="#9DFF00"
+                               FontSize="11"
+                               IsVisible="False" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Padding="18"
+                        Background="{StaticResource GlassBrush}"
+                        Stroke="{StaticResource PanelStrokeBrush}"
+                        StrokeThickness="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="14">
+                        <Label x:Name="OutputTitleLabel"
+                               Text="WORK / OUTPUT FOLDER"
+                               TextColor="#00E5FF"
+                               FontSize="10"
+                               FontFamily="OpenSansSemibold"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.8" />
+
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="#48101624"
+                                    Stroke="#4C7C3DFF"
+                                    StrokeThickness="1"
+                                    Padding="8,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Entry x:Name="OutputPathEntry"
+                                       IsReadOnly="True"
+                                       Placeholder="Choose the dat_output folder or the extracted folder"
+                                       PlaceholderColor="#7F95A5"
+                                       TextColor="#F6FEFF"
+                                       BackgroundColor="Transparent"
+                                       FontSize="13" />
+                            </Border>
+
+                            <Button Grid.Column="1"
+                                    x:Name="FolderButton"
+                                    Text="Folder"
+                                    ImageSource="folder_open.png"
+                                    ContentLayout="Left,8"
+                                    Clicked="OnBrowseOutputClicked"
+                                    Style="{StaticResource GhostButton}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                    <Border Grid.Column="0"
+                            Padding="18"
+                            Background="{StaticResource GlassBrush}"
+                            Stroke="{StaticResource PanelStrokeBrush}"
+                            StrokeThickness="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="12">
+                            <Label x:Name="ExtractTitleLabel"
+                                   Text="EXTRACT"
+                                   TextColor="#00E5FF"
+                                   FontSize="10"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1.8" />
+                            <Label x:Name="ExtractCaptionLabel"
+                                   Text="Reads the UFS image and writes files to the extracted folder."
+                                   TextColor="#C7D8E4"
+                                   FontSize="12"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1"
+                            Padding="18"
+                            Background="{StaticResource GlassBrush}"
+                            Stroke="{StaticResource PanelStrokeBrush}"
+                            StrokeThickness="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="12">
+                            <Label x:Name="PatchTitleLabel"
+                                   Text="REBUILD .DAT"
+                                   TextColor="#FF2BD6"
+                                   FontSize="10"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1.8" />
+                            <Label x:Name="PatchCaptionLabel"
+                                   Text="Rebuilds a new .dat with edited files, even bigger or smaller."
+                                   TextColor="#C7D8E4"
+                                   FontSize="12"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border Padding="18"
+                        Background="{StaticResource GlassBrush}"
+                        Stroke="{StaticResource PanelStrokeBrush}"
+                        StrokeThickness="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Label x:Name="ProgressTitleLabel"
+                                   Grid.Column="0"
+                                   Text="PROGRESS"
+                                   TextColor="#00E5FF"
+                                   FontSize="10"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1.8"
+                                   VerticalOptions="Center" />
+                            <Label x:Name="ProgressPercentLabel"
+                                   Grid.Column="1"
+                                   Text="0%"
+                                   TextColor="#9DFF00"
+                                   FontSize="15"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                        </Grid>
+
+                        <Border BackgroundColor="#75050A12"
+                                Stroke="#5200E5FF"
+                                StrokeThickness="1"
+                                HeightRequest="18"
+                                Padding="3">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <ProgressBar x:Name="MainProgressBar"
+                                         Progress="0"
+                                         ProgressColor="#9DFF00"
+                                         BackgroundColor="Transparent"
+                                         HeightRequest="8"
+                                         VerticalOptions="Center" />
+                        </Border>
+
+                        <Label x:Name="StatusLabel"
+                               Text="Ready."
+                               TextColor="#C7D8E4"
+                               FontSize="12" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Padding="18"
+                        Background="{StaticResource GlassBrush}"
+                        Stroke="{StaticResource PanelStrokeBrush}"
+                        StrokeThickness="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <Label x:Name="LogTitleLabel"
+                                   Grid.Column="0"
+                                   Text="OPERATION LOG"
+                                   TextColor="#00E5FF"
+                                   FontSize="10"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1.8"
+                                   VerticalOptions="Center" />
+                            <Button x:Name="ClearLogButton"
+                                    Grid.Column="1"
+                                    Text="Clear"
+                                    Clicked="OnClearLogClicked"
+                                    Style="{StaticResource GhostButton}"
+                                    HeightRequest="36"
+                                    MinimumHeightRequest="36"
+                                    Padding="12,6" />
+                        </Grid>
+
+                        <Border BackgroundColor="#A005070D"
+                                Stroke="#4C00E5FF"
+                                StrokeThickness="1"
+                                Padding="10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Editor x:Name="LogEditor"
+                                    HeightRequest="190"
+                                    IsReadOnly="True"
+                                    AutoSize="Disabled"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#9DFF00"
+                                    FontFamily="Courier New"
+                                    FontSize="11" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="2"
+                Padding="20,12"
+                BackgroundColor="#D90A0E17"
+                Stroke="#4400E5FF"
+                StrokeThickness="1">
+            <Grid ColumnDefinitions="*,*,Auto,Auto" ColumnSpacing="10">
+                <Button Grid.Column="0"
+                        x:Name="ExtractButton"
+                        Text="Extract"
+                        ImageSource="extract_file.png"
+                        ContentLayout="Left,8"
+                        Clicked="OnExtractClicked"
+                        Style="{StaticResource NeonButton}"
+                        HeightRequest="48" />
+
+                <Button Grid.Column="1"
+                        x:Name="PatchButton"
+                        Text="Rebuild .dat"
+                        ImageSource="patch_file.png"
+                        ContentLayout="Left,8"
+                        Clicked="OnPatchClicked"
+                        Style="{StaticResource NeonButton}"
+                        HeightRequest="48" />
+
+                <Button Grid.Column="2"
+                        x:Name="CancelButton"
+                        Text="Cancel"
+                        ImageSource="cancel_action.png"
+                        ContentLayout="Left,8"
+                        Clicked="OnCancelClicked"
+                        IsEnabled="False"
+                        Style="{StaticResource DangerButton}"
+                        HeightRequest="48" />
+
+                <Button Grid.Column="3"
+                        x:Name="ResetButton"
+                        Text="Reset"
+                        Clicked="OnResetClicked"
+                        Style="{StaticResource GhostButton}"
+                        HeightRequest="48" />
+            </Grid>
+        </Border>
+
+        <Grid x:Name="AlertOverlay"
+              Grid.RowSpan="3"
+              IsVisible="False"
+              Opacity="0"
+              BackgroundColor="#B805070D">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer />
+            </Grid.GestureRecognizers>
+
+            <Border x:Name="AlertCard"
+                    WidthRequest="560"
+                    MaximumWidthRequest="620"
+                    Padding="0"
+                    Background="{StaticResource GlassBrush}"
+                    Stroke="{StaticResource PanelStrokeBrush}"
+                    StrokeThickness="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#00E5FF" Opacity="0.28" Radius="28" Offset="0,0" />
+                </Border.Shadow>
+
+                <Grid RowDefinitions="Auto,1,Auto">
+                    <VerticalStackLayout Grid.Row="0" Padding="28,24,28,20" Spacing="14">
+                        <Label x:Name="AlertTitleLabel"
+                               Text="Alert"
+                               TextColor="#F6FEFF"
+                               FontSize="24"
+                               FontFamily="OpenSansSemibold"
+                               FontAttributes="Bold" />
+
+                        <Label x:Name="AlertMessageLabel"
+                               Text="Message"
+                               TextColor="#DDEBFF"
+                               FontSize="15"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+
+                    <BoxView Grid.Row="1" Color="#4400E5FF" HeightRequest="1" />
+
+                    <Grid Grid.Row="2" Padding="28,18,28,22" ColumnDefinitions="*,220">
+                        <Label Grid.Column="0"
+                               Text="SYSTEM MESSAGE"
+                               TextColor="#00E5FF"
+                               FontSize="10"
+                               FontFamily="OpenSansSemibold"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.6"
+                               VerticalOptions="Center" />
+
+                        <Button x:Name="AlertOkButton"
+                                Grid.Column="1"
+                                Text="OK"
+                                Clicked="OnAlertOkClicked"
+                                Style="{StaticResource NeonButton}"
+                                HeightRequest="42"
+                                MinimumHeightRequest="42" />
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>
